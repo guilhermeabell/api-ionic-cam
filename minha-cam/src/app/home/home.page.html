@@ -1,0 +1,13 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Câmera
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <img [src]="photo">
+  
+  <ion-button (click)="tirarfoto()"><ion-icon name="camera"></ion-icon></ion-button>
+</ion-content>
