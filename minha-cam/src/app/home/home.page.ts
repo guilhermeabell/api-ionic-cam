@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Plugins, CameraResultType, CameraSource} from '@capacitor/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 
 
@@ -10,11 +12,15 @@ import { HttpClient } from '@angular/common';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
+
 export class HomePage {
 
   photo: SafeResourceUrl;
-
-  constructor(private sanitizer: DomSanitizer) {}
+  
+  constructor(
+    private sanitizer: DomSanitizer,
+    private http: HttpClient
+    ) {}
 
   async tirarfoto() {
     const image = await Plugins.Camera.getPhoto({
@@ -23,10 +29,10 @@ export class HomePage {
       resultType: CameraResultType.DataUrl,
       source: CameraSource.Camera
     });
-    
-    this.photo = this.sanitizer.bypassSecurityTrustResourceUrl(image && (image.dataUrl));
+    const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data; charset=utf-8');
+    this.photo = this.sanitizer.bypassSecurityTrustResourceUrl(image && image.dataUrl);
     var formData = new FormData();
     formData.append("image", this.photo);
-    this.http.post<any>('http://127.0.0.1:5000/prediction', formData, 'multipart/form-data'); 
+    return this.http.post<any>('http://127.0.0.1:5000/prediction', formData); 
   }
 }
