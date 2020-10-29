@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Plugins, CameraResultType, CameraSource} from '@capacitor/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common';
 
 
 
@@ -25,8 +25,8 @@ export class HomePage {
     });
     
     this.photo = this.sanitizer.bypassSecurityTrustResourceUrl(image && (image.dataUrl));
-   /* var formData = new FormData();
-    formData.append("image", this.file);
-    this.httpClient.post<any>('http://127.0.0.1:5000/prediction', formData); */
+    var formData = new FormData();
+    formData.append("image", this.photo);
+    this.http.post<any>('http://127.0.0.1:5000/prediction', formData, 'multipart/form-data'); 
   }
 }
